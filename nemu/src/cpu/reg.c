@@ -29,7 +29,7 @@ void reg_test() {
 	assert(reg_b(R_CH) == ((sample[R_ECX] >> 8) & 0xff));
 	assert(reg_b(R_DL) == (sample[R_EDX] & 0xff));
 	assert(reg_b(R_DH) == ((sample[R_EDX] >> 8) & 0xff));
-	printf("sample:%d cpu.eax:%d",sample[R_EAX],cpu.eax);
+	printf("sample:%d cpu.eax:%d",sample[R_ECX],cpu.ecx);
 	assert(sample[R_EAX] == cpu.eax);
 	assert(sample[R_ECX] == cpu.ecx);
 	assert(sample[R_EDX] == cpu.edx);
