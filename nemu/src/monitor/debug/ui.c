@@ -71,7 +71,7 @@ static int cmd_info(char *args){
 	if(strcmp(arg,"r")==0){
 		int i=R_EAX;
 		for(;i<R_EDI;i++){
-			printf("%s:%d\n",regsl[i],cpu.gpr[i]._32);
+			printf("%s:%x\n",regsl[i],cpu.gpr[i]._32);
 		}
 
 	}else{
