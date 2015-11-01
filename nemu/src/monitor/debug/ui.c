@@ -75,7 +75,7 @@ static int cmd_info(char *args){
 		}
 
 	}else{
-		printf("Unknown Instruction");
+		printf("Unknown Instruction\n");
 
 	}
 	return 0;
