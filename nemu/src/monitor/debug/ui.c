@@ -7,6 +7,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+extern CPU_state cpu;
+
 void cpu_exec(uint32_t);
 
 /* We use the ``readline'' library to provide more flexibility to read from stdin. */
@@ -38,6 +40,43 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
+static int cmd_info(char *args);
+
+static struct {
+	char *name;
+	char *description;
+	int (*handler) (char *);
+} cmd_table [] = {
+	{ "help", "Display informations about all supported commands", cmd_help },
+	{ "c", "Continue the execution of the program", cmd_c },
+	{ "q", "Exit NEMU", cmd_q },
+	{ "si","单步调试",cmd_si },
+	{ "info","print regInfo or watchPointInfo",cmd_info }
+	/* TODO: Add more commands */
+
+
+};
+
+#define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
+
+static int cmd_info(char *args){
+	//r or w
+	char *arg = strtok(NULL," ");
+	if(strcmp(arg,"r")==0){
+		int i=R_EAX;
+		for(;i<R_EDI;i++){
+			printf("%s:%d\n",regsl[i],cpu.gpr[i]._32);
+		}
+
+	}else{
+		printf("Unknown Instruction");
+
+	}
+	return 0;
+}
+
 static int cmd_si(char *args){
 	char *arg = strtok(NULL," ");
 	int n;
@@ -53,21 +92,6 @@ static int cmd_si(char *args){
 	}
 	return 0;
 }
-static struct {
-	char *name;
-	char *description;
-	int (*handler) (char *);
-} cmd_table [] = {
-	{ "help", "Display informations about all supported commands", cmd_help },
-	{ "c", "Continue the execution of the program", cmd_c },
-	{ "q", "Exit NEMU", cmd_q },
-	{ "si","单步调试",cmd_si }
-	/* TODO: Add more commands */
-
-};
-
-#define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
-
 static int cmd_help(char *args) {
 	/* extract the first argument */
 	char *arg = strtok(NULL, " ");
