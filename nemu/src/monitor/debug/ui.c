@@ -64,6 +64,10 @@ static struct {
 static int cmd_info(char *args){
 	//r or w
 	char *arg = strtok(NULL," ");
+	if(arg == NULL){
+		printf("please input -r or -w after info\n");	
+		return 0;
+	}
 	if(strcmp(arg,"r")==0){
 		int i=R_EAX;
 		for(;i<R_EDI;i++){
