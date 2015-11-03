@@ -44,6 +44,8 @@ static int cmd_si(char *args);
 
 static int cmd_info(char *args);
 
+static int cmd_x(char *args);
+
 static struct {
 	char *name;
 	char *description;
@@ -53,7 +55,8 @@ static struct {
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 	{ "si","单步调试",cmd_si },
-	{ "info","print regInfo or watchPointInfo",cmd_info }
+	{ "info","print regInfo or watchPointInfo",cmd_info },
+	{	"x","扫描内存",cmd_x}
 	/* TODO: Add more commands */
 
 
@@ -61,11 +64,34 @@ static struct {
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
 
+static int cmd_x(char *args){
+	char *arg = strtok(NULL," "); //解析个数
+	int n;
+	if(arg == NULL){
+		printf("please input length\n");
+		return 0;
+	}else if(sscanf(arg,"%d",&n)==-1){
+		printf("please input correct number\n");
+		return 0;
+	}else{
+		char *arg1 = strtok(NULL," ");//解析起始地址,TODO:表达式运算和异常的判断
+		if(arg == NULL){
+			printf("please input start address\n");
+			return 0;
+		}else{
+			hwaddr_t startAddress;
+			sscanf(arg1,"%u",&startAddress);
+			printf("0x%x\n",hwaddr_read(startAddress,n));
+		}
+	}
+	return 0;
+}
+
 static int cmd_info(char *args){
 	//r or w
 	char *arg = strtok(NULL," ");
 	if(arg == NULL){
-		printf("please input r or w after info\n");	
+		printf("please input r or w after info\n");
 		return 0;
 	}
 	if(strcmp(arg,"r")==0){
