@@ -83,7 +83,7 @@ static int cmd_x(char *args){
 			sscanf(arg1,"%x",&startAddress);
 			int x;
 			for (x = 0; x < n; x++) {
-				printf("0x%x  0x%x\n",startAddress,swaddr_read(startAddress,4));
+				printf("%d. 0x%x : 0x%x\n",x+1,startAddress,swaddr_read(startAddress,4));
 				startAddress += 4;
 			}
 		}
