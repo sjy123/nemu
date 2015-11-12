@@ -8,6 +8,7 @@
 
 enum {
 	NOTYPE = 256, EQ
+	,REG,INT_10,INT_16
 
 	/* TODO: Add more token types */
 
@@ -22,8 +23,15 @@ static struct rule {
 	 * Pay attention to the precedence level of different rules.
 	 */
 
+	{"0[xX][0-9a-fA-F]+", INT_16},//0xfffffff 等16进制数字匹配
+	{"\\d+",INT_10}, //10进制整数匹配
+	{"\\$[a-z]+", REG}, //$eax等寄存器匹配
 	{" +",	NOTYPE},				// spaces
 	{"\\+", '+'},					// plus
+	{"-", '-'}, // sub
+	{"/", '/'}, //div
+	{"\\*", '*'}, //multi
+
 	{"==", EQ}						// equal
 };
 
@@ -60,7 +68,7 @@ static bool make_token(char *e) {
 	int position = 0;
 	int i;
 	regmatch_t pmatch;
-	
+
 	nr_token = 0;
 
 	while(e[position] != '\0') {
@@ -74,11 +82,37 @@ static bool make_token(char *e) {
 				position += substr_len;
 
 				/* TODO: Now a new token is recognized with rules[i]. Add codes
-				 * to record the token in the array ``tokens''. For certain 
+				 * to record the token in the array ``tokens''. For certain
 				 * types of tokens, some extra actions should be performed.
 				 */
 
 				switch(rules[i].token_type) {
+					case NOTYPE:break;
+					case INT_16:
+						tokens[nr_token].type = rules[i].token_type;
+						//memcpy()
+						//sprinf(tokens[nr_token++].str,)
+
+					break;
+					case INT_10:
+
+						assert(substr_len<32);
+					break;
+					case '+':
+
+					break;
+					case '-':
+
+					break;
+					case '*':
+
+					break;
+					case '/':
+
+					break;
+					case REG:
+
+					break;
 					default: panic("please implement me");
 				}
 
@@ -92,7 +126,7 @@ static bool make_token(char *e) {
 		}
 	}
 
-	return true; 
+	return true;
 }
 
 uint32_t expr(char *e, bool *success) {
@@ -105,4 +139,3 @@ uint32_t expr(char *e, bool *success) {
 	panic("please implement me");
 	return 0;
 }
-

@@ -79,9 +79,12 @@ static int cmd_x(char *args){
 			printf("please input start address\n");
 			return 0;
 		}else{
-			hwaddr_t startAddress;
+			swaddr_t startAddress;
 			sscanf(arg1,"%u",&startAddress);
-			printf("0x%x\n",hwaddr_read(startAddress,n));
+			int x;
+			for (x = 0; x < n; x++) {
+				printf("0x%x  0x%x\n",startAddress+x*4,swaddr_read(startAddress,4));
+			}
 		}
 	}
 	return 0;
