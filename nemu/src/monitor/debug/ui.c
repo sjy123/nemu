@@ -80,11 +80,11 @@ static int cmd_x(char *args){
 			return 0;
 		}else{
 			swaddr_t startAddress;
-			sscanf(arg1,"%u",&startAddress);
+			sscanf(arg1,"%x",&startAddress);
 			int x;
 			for (x = 0; x < n; x++) {
 				printf("%x",startAddress);
-				//printf("0x%x  0x%x\n",startAddress+x*4,swaddr_read(startAddress,x));
+			//	printf("0x%x  0x%x\n",startAddress+x*4,swaddr_read(startAddress,x));
 			}
 		}
 	}
