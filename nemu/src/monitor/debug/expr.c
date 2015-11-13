@@ -188,10 +188,15 @@ uint32_t eval(uint32_t p,uint32_t q){
 
 bool check_parentheses(uint32_t p,uint32_t q){
 	int parentheses = 0;
+	if(tokens[p].type!= '(' || tokens[q].type!= ')')
+	{
+		return false;
+	}
+
 	for (; p<=q; p++) {
 
 		if (parentheses<0) {
-			return false;
+			assert(0);
 		}
 
 		if (tokens[p].type == '(') {
@@ -204,7 +209,7 @@ bool check_parentheses(uint32_t p,uint32_t q){
 	if (parentheses == 0) {
 		return true;
 	}
-	return false;
+	assert(0);
 }
 uint32_t getOp(uint32_t p,uint32_t q){
 	int parentheses = 0;
