@@ -71,9 +71,9 @@ static int cmd_p(char *args){//TODO:表达式求值
 	bool success = true;
 	bool* successp = &success;
 	if (arg == NULL) {
-		printf("please input the expression");
+		printf("please input the expression\n");
 	}else{
-		printf("ans : %u",expr(arg,successp));
+		printf("ans : %u\n",expr(arg,successp));
 	}
 	return 0;
 }
