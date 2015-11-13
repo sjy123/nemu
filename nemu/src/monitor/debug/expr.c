@@ -162,8 +162,6 @@ uint32_t expr(char *e, bool *success) {
 	/* TODO: Insert codes to evaluate the expression. */
 	return eval(0,nr_token-1);
 }
-//extern CPU_state cpu; //cpu声明
-//const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};
 
 uint32_t eval(uint32_t p,uint32_t q){
 //	Log("%d %d\n",p,q);
