@@ -111,7 +111,7 @@ static bool make_token(char *e) {
 						break;
 					case REG:
 						tokens[nr_token].type = rules[i].token_type;
-						memcpy(tokens[nr_token].str,substr_start,substr_len);
+						memcpy(tokens[nr_token].str,substr_start+1,substr_len-1);
 						nr_token++;
 						break;
 					case '*':
@@ -162,6 +162,9 @@ uint32_t expr(char *e, bool *success) {
 	/* TODO: Insert codes to evaluate the expression. */
 	return eval(0,nr_token-1);
 }
+extern CPU_state cpu; //cpu声明
+//const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};
+
 uint32_t eval(uint32_t p,uint32_t q){
 //	Log("%d %d\n",p,q);
 	assert(p<=q);
@@ -170,11 +173,41 @@ uint32_t eval(uint32_t p,uint32_t q){
 		uint32_t n;
 		if(tokens[q].type == INT_16)
 			sscanf(tokens[q].str,"%x",&n);
-		else sscanf(tokens[q].str,"%d",&n);
+		else if (tokens[q].type == INT_10) {
+			sscanf(tokens[q].str,"%d",&n);
+		}else{
+			int i=0;int flag=-1;
+			for (; i < 8; i++) {
+				if (strcmp(*(regsl+i),tokens[q].str)==0) {
+					flag = 1;
+					break;
+				}
+			}
+			if (flag) { //找到
+				switch(i){
+					case 0:return cpu.eax;
+					case 1:return cpu.ecx;
+					case 2:return cpu.edx;
+					case 3:return cpu.ebx;
+					case 4:return cpu.esp;
+					case 5:return cpu.ebp;
+					case 6:return cpu.esi;
+					case 7:return cpu.edi;
+				}
+			}else
+			{
+				panic("reg can not find error");
+			}
+
+		}
 		return n;
 
 	}else if(check_parentheses(p,q) == true){ //判断括号
 			return eval(p+1,q-1);
+	}else if (tokens[p].type =='!') {
+		return !eval(++p,q);
+	}else if (tokens[p].type == DEREF) {
+		return swaddr_read(eval(++p,q),4);
 	}else{ //递归计算
 			uint32_t op = getOp(p,q); //获取dominat operator
 			uint32_t val1 = eval(p,op-1);
@@ -236,8 +269,9 @@ uint32_t getOp(uint32_t p,uint32_t q){
 	*/
 	for (; p <= q; p++) {
 
-		if (tokens[p].type == INT_10 || tokens[p].type == INT_16) {
-			//跳过数字
+		if (tokens[p].type == INT_10 || tokens[p].type == INT_16 || tokens[p].type == '!'
+		||tokens[p].type == DEREF || tokens[p].type == REG) {
+			//跳过数字和单目运算符
 			continue;
 		}else if (tokens[p].type == '(') {
 			//跳过括号
