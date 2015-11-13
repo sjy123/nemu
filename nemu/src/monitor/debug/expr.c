@@ -26,7 +26,7 @@ static struct rule {
 
 	{"0[xX][0-9a-fA-F]+", INT_16},//0xfffffff 等16进制数字匹配
 	{"[0-9]+",INT_10}, //10进制整数匹配
-	{"\\$%[a-z]+", REG}, //$eax等寄存器匹配
+	{"\\$[a-z]+", REG}, //$eax等寄存器匹配
 	{" +",	NOTYPE},				// spaces
 	{"\\+", '+'},					// plus
 	{"-", '-'}, // sub or 负号
