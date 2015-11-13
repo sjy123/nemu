@@ -158,6 +158,7 @@ uint32_t expr(char *e, bool *success) {
 	return eval(0,nr_token-1);
 }
 uint32_t eval(uint32_t p,uint32_t q){
+	Log("%d %d\n",p,q);
 	assert(p<=q);
 	if (p==q) { //解析数字
 
