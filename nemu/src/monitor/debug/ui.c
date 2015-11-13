@@ -46,6 +46,8 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
+static int cmd_p(char *args);
+
 static struct {
 	char *name;
 	char *description;
@@ -54,16 +56,27 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
-	{ "si","单步调试",cmd_si },
+	{ "si","step through",cmd_si },
 	{ "info","print regInfo or watchPointInfo",cmd_info },
-	{	"x","扫描内存",cmd_x}
+	{	"x","Scan memory",cmd_x},
+	{	"p","expression evaluation",cmd_p}
 	/* TODO: Add more commands */
 
 
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
-
+static int cmd_p(char *args){//TODO:表达式求值
+	char *arg = strtok(NULL,"");
+	bool success = true;
+	bool* successp = &success;
+	if (arg == NULL) {
+		printf("please input the expression");
+	}else{
+		printf("ans : %u",expr(arg,successp));
+	}
+	return 0;
+}
 static int cmd_x(char *args){
 	char *arg = strtok(NULL," "); //解析个数
 	int n;
@@ -83,7 +96,7 @@ static int cmd_x(char *args){
 			sscanf(arg1,"%x",&startAddress);
 			int x;
 			for (x = 0; x < n; x++) {
-				printf("%d. 0x%x : 0x%x\n",x+1,startAddress,swaddr_read(startAddress,4));
+				printf("%d.  0x%x : 0x%x\n",x+1,startAddress,swaddr_read(startAddress,4));
 				startAddress += 4;
 			}
 		}
