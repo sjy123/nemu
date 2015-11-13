@@ -73,7 +73,8 @@ static int cmd_p(char *args){//TODO:表达式求值
 	if (arg == NULL) {
 		printf("please input the expression\n");
 	}else{
-		printf("ans : %u\n",expr(arg,successp));
+
+		printf("%s = %u\n",arg,expr(arg,successp));
 	}
 	return 0;
 }
