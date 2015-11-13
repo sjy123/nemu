@@ -158,7 +158,7 @@ uint32_t expr(char *e, bool *success) {
 	return eval(0,nr_token-1);
 }
 uint32_t eval(uint32_t p,uint32_t q){
-	Log("%d %d\n",p,q);
+//	Log("%d %d\n",p,q);
 	assert(p<=q);
 	if (p==q) { //解析数字
 
@@ -174,7 +174,7 @@ uint32_t eval(uint32_t p,uint32_t q){
 			uint32_t op = getOp(p,q); //获取dominat operator
 			uint32_t val1 = eval(p,op-1);
 			uint32_t val2 = eval(op+1,q);
-			printf("\n%u %c %u\n",val1,tokens[op].type,val2);
+	//		printf("\n%u %c %u\n",val1,tokens[op].type,val2);
 
 			switch(tokens[op].type){
 				case '+':return val1+val2;
