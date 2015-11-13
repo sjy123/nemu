@@ -194,7 +194,7 @@ bool check_parentheses(uint32_t p,uint32_t q){
 	}
 
 	for (; p<=q; p++) {
-		
+
 		if (parentheses<0) {
 			assert(0);
 		}
@@ -204,6 +204,9 @@ bool check_parentheses(uint32_t p,uint32_t q){
 		}else if(tokens[p].type == ')'){
 			parentheses--;
 		}
+
+		if(parentheses == 0 && p!=q)
+			return false;
 	}
 
 	if (parentheses == 0) {
