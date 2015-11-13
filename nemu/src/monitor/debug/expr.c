@@ -9,6 +9,7 @@
 enum {
 	NOTYPE = 256, EQ
 	,REG,INT_10,INT_16
+	,NEQ,AND,OR,DEREF
 
 	/* TODO: Add more token types */
 
@@ -33,7 +34,12 @@ static struct rule {
 	{"\\*", '*'}, //multi or 地址
 	{"\\(",'('}, //LB 左括号
 	{"\\)",')'}, //RB 右括号
-	{"==", EQ}						// equal
+	{"==", EQ},					// equal
+	{"!=",NEQ},
+	{"&&",AND},
+	{"\\|\\|",OR},
+	{"!",'!'}
+
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -103,32 +109,31 @@ static bool make_token(char *e) {
 						memcpy(tokens[nr_token].str,substr_start,substr_len);
 						nr_token++;
 						break;
-					case '+':
-						tokens[nr_token].type = rules[i].token_type;
-						nr_token++;
-						break;
-					case '-':
-						tokens[nr_token].type = rules[i].token_type;
-						nr_token++;
-						break;
-					case '*':
-						tokens[nr_token].type = rules[i].token_type;
-						nr_token++;
-						break;
-					case '/':
-						tokens[nr_token].type = rules[i].token_type;
-						nr_token++;
-						break;
 					case REG:
 						tokens[nr_token].type = rules[i].token_type;
 						memcpy(tokens[nr_token].str,substr_start,substr_len);
 						nr_token++;
 						break;
+					case '*':
+						//是否是解引用指针的判断
+						if(nr_token==0 || (tokens[nr_token-1].type != INT_10 &&
+							tokens[nr_token-1].type != INT_16 &&
+							tokens[nr_token-1].type != ')'))
+						{
+							tokens[nr_token].type = DEREF;
+							nr_token++;
+							break;
+						}
+					case '+':
+					case '-':
+					case '/':
 					case '(':
-						tokens[nr_token].type = rules[i].token_type;
-						nr_token++;
-						break;
 					case ')':
+					case NEQ:
+					case EQ:
+					case '!':
+					case AND:
+					case OR:
 						tokens[nr_token].type = rules[i].token_type;
 						nr_token++;
 						break;
@@ -217,7 +222,14 @@ bool check_parentheses(uint32_t p,uint32_t q){
 uint32_t getOp(uint32_t p,uint32_t q){
 	int parentheses = 0;
 	int op=p;
-	int priority=2;// p"-,+"=0,p"*,/"=1
+	int priority=10;/* 优先级默认定义
+	p"||"=-3
+	p"&&"=-2,
+	p"==,!="=-1,
+	p"-,+"=0,
+	p"*,/"=1，
+	p"!,*"=2;
+	*/
 	for (; p <= q; p++) {
 
 		if (tokens[p].type == INT_10 || tokens[p].type == INT_16) {
@@ -245,6 +257,21 @@ uint32_t getOp(uint32_t p,uint32_t q){
 			if (priority>=1) {
 				op = p;
 				priority = 1;
+			}
+		}else if (tokens[p].type == AND) {
+			if (priority>=-2) {
+				op = p;
+				priority = -2;
+			}
+		}else if(tokens[p].type == OR){
+			if (priority>=-3) {
+				op = p;
+				priority = -3;
+			}
+		}else if (tokens[p].type == NEQ || tokens[p].type == EQ) {
+			if (priority>=-1) {
+				op = p;
+				priority = -1;
 			}
 		}
 	}
