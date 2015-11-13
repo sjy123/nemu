@@ -101,7 +101,6 @@ static bool make_token(char *e) {
 						assert(substr_len<32);
 						tokens[nr_token].type = rules[i].token_type;
 						memcpy(tokens[nr_token].str,substr_start,substr_len);
-						printf("%s",tokens[nr_token].str);
 						nr_token++;
 						break;
 					case '+':
@@ -174,6 +173,7 @@ uint32_t eval(uint32_t p,uint32_t q){
 			uint32_t op = getOp(p,q); //获取dominat operator
 			uint32_t val1 = eval(p,op-1);
 			uint32_t val2 = eval(op+1,q);
+			printf("\n%u %c %u\n",val1,tokens[op].type,val2);
 
 			switch(tokens[op].type){
 				case '+':return val1+val2;
