@@ -186,6 +186,10 @@ uint32_t eval(uint32_t p,uint32_t q){
 				case '-':return val1-val2;
 				case '*':return val1*val2;
 				case '/':return val1/val2;
+				case EQ:return val1==val2;
+				case NEQ:return val1!=val2;
+				case AND:return val1&&val2;
+				case OR:return val1||val2;
 				default: assert(0);
 			}
 	}
