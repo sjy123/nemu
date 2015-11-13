@@ -194,14 +194,14 @@ bool check_parentheses(uint32_t p,uint32_t q){
 	}
 
 	for (; p<=q; p++) {
-
+		
 		if (parentheses<0) {
 			assert(0);
 		}
 
 		if (tokens[p].type == '(') {
 			parentheses++;
-		}else if(tokens[q].type == ')'){
+		}else if(tokens[p].type == ')'){
 			parentheses--;
 		}
 	}
