@@ -4,7 +4,6 @@
 #define NR_WP 32
 
 static WP wp_list[NR_WP];
-WP *head;
 static WP *free_;
 
 void init_wp_list() {

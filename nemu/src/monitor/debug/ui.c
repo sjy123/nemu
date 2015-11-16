@@ -50,6 +50,8 @@ static int cmd_p(char *args);
 
 static int cmd_w(char *args);
 
+static int cmd_d(char *args);
+
 static struct {
 	char *name;
 	char *description;
@@ -62,13 +64,41 @@ static struct {
 	{ "info","print regInfo or watchPointInfo",cmd_info },
 	{	"x","Scan memory",cmd_x},
 	{	"p","expression evaluation",cmd_p},
-	{	"w","set watchpoint",cmd_w}
+	{	"w","set watchpoint",cmd_w},
+	{ "d","delete watchpoint according to the number",cmd_d}
 	/* TODO: Add more commands */
 
 
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
+static int cmd_d(char *args){
+	char *arg = strtok(NULL,"");
+	int NO;
+	if (arg == NULL) {
+		printf("please input number");
+	}else{
+		if (sscanf(arg,"%d",&NO)==-1) {
+			printf("please input correct number");
+		}else{
+			WP* tempH = head;
+			WP* target = NULL;
+			while (tempH!=NULL) {
+				if(tempH->NO == NO){
+					target = tempH;
+					free_wp(target);
+					printf("delete watchpoint NO.%d success\n",NO);
+					break;
+				}
+			}
+			if (target == NULL) {
+				printf("do not have NO.%d in watchpoint pool\n",NO);
+			}
+		}
+	}
+	return 0;
+
+}
 static int cmd_w(char *args){
 	char *arg = strtok(NULL,"");
 	bool success = true;
