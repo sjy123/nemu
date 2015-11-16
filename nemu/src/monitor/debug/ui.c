@@ -176,7 +176,7 @@ static int cmd_info(char *args){
 		bool* successp = &success;
 		WP* tempH = head;
 		while(tempH!=NULL){
-			printf("watchpoint NO.%d , expr is %s = %u\n",tempH->NO,tempH->str,expr(tempH->str,successp));
+			printf("watchpoint NO.%d , expr is %s : %u\n",tempH->NO,tempH->str,expr(tempH->str,successp));
 			tempH = tempH->next;
 		}
 	}else{
