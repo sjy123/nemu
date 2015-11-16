@@ -90,6 +90,7 @@ static int cmd_d(char *args){
 					printf("delete watchpoint NO.%d success\n",NO);
 					break;
 				}
+				tempH = tempH->next;
 			}
 			if (target == NULL) {
 				printf("do not have NO.%d in watchpoint pool\n",NO);
