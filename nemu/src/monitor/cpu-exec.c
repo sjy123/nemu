@@ -80,7 +80,7 @@ void cpu_exec(volatile uint32_t n) {
 			uint32_t result;
 			if (tempH->result!=(result=expr(tempH->str,&success))) {
 				//触发watchpoint
-				printf("watchpoint NO.%d trigger \nexpr is %s = %u , inital result = %u\n",tempH->NO,tempH->str,result,tempH->result);
+				printf("watchpoint NO.%d trigger , expr is %s = %u , inital result = %u\n",tempH->NO,tempH->str,result,tempH->result);
 				nemu_state = STOP;
 			}
 			tempH = tempH -> next;
