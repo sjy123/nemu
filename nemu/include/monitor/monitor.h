@@ -3,5 +3,4 @@
 
 enum { STOP, RUNNING, END };
 extern int nemu_state;
-
 #endif

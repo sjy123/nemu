@@ -4,13 +4,13 @@
 #define NR_WP 32
 
 static WP wp_list[NR_WP];
-static WP *head;
+WP *head;
 static WP *free_;
 
 void init_wp_list() {
 	int i;
 	for(i = 0; i < NR_WP; i ++) {
-	//	wp_list[i].NO = i;
+		wp_list[i].NO = i;
 		wp_list[i].next = &wp_list[i + 1];
 	}
 	wp_list[NR_WP - 1].next = NULL;

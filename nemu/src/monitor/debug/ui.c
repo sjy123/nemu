@@ -7,7 +7,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-extern CPU_state cpu;
+
 
 void cpu_exec(uint32_t);
 
@@ -48,6 +48,8 @@ static int cmd_x(char *args);
 
 static int cmd_p(char *args);
 
+static int cmd_w(char *args);
+
 static struct {
 	char *name;
 	char *description;
@@ -59,13 +61,29 @@ static struct {
 	{ "si","step through",cmd_si },
 	{ "info","print regInfo or watchPointInfo",cmd_info },
 	{	"x","Scan memory",cmd_x},
-	{	"p","expression evaluation",cmd_p}
+	{	"p","expression evaluation",cmd_p},
+	{	"w","set watchpoint",cmd_w}
 	/* TODO: Add more commands */
 
 
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
+static int cmd_w(char *args){
+	char *arg = strtok(NULL,"");
+	bool success = true;
+	bool* successp = &success;
+	if (arg == NULL) {
+		printf("please input the expression\n");
+	}else{
+		WP* wp = new_wp();
+		uint32_t result = expr(arg,successp);
+		wp->result = result;
+		strcpy(wp->str,arg);
+		printf("set watchpoint,NO.%d; %s = %u\n",wp->NO,arg,result);
+	}
+	return 0;
+}
 static int cmd_p(char *args){//TODO:表达式求值
 	char *arg = strtok(NULL,"");
 	bool success = true;
