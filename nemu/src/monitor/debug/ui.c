@@ -65,7 +65,8 @@ static struct {
 	{	"x","Scan memory",cmd_x},
 	{	"p","expression evaluation",cmd_p},
 	{	"w","set watchpoint",cmd_w},
-	{ "d","delete watchpoint according to the number",cmd_d}
+	{ "d","delete watchpoint according to the number",cmd_d},
+
 	/* TODO: Add more commands */
 
 
@@ -161,15 +162,25 @@ static int cmd_info(char *args){
 		printf("please input r or w after info\n");
 		return 0;
 	}
+	//打印寄存器状态
 	if(strcmp(arg,"r")==0){
 		int i=R_EAX;
 		for(;i<R_EDI;i++){
 			printf(" %s : 0x%x\n",regsl[i],cpu.gpr[i]._32);
 		}
 
+	}
+	//打印监视点信息
+	else if (strcmp(arg,"w")==0) {
+		bool success = true;
+		bool* successp = &success;
+		WP* tempH = head;
+		while(tempH!=NULL){
+			printf("watchpoint NO.%d , expr is %s = %u\n",tempH->NO,tempH->str,expr(tempH->str,successp));
+			tempH = tempH->next;
+		}
 	}else{
 		printf("Unknown Instruction\n");
-
 	}
 	return 0;
 }
